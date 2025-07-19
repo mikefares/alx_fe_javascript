@@ -21,37 +21,43 @@ function showRandomQuote(){
 }
 
 function createAddQuoteForm(){
-    const container = document.getElementById('quoteFormContainer');
+    const container = document.createElement('div');
+    container.innerHTML = `<div id="formWrapper" style="margin-top: 1rem;"></div>`;
 
-    container.innerHTML = `
-        <div style="margin-top: 1rem;">
-        <input id="newQuoteText" type="text" placeholder="Enter a new quote" />
-        <input id="newQuoteCategory" type="text" placeholder="Enter quote category" />
-        <button id="addQuoteBtn">Add Quote</button>
-        </div>
-    `;
+    const formWrapper = container.querySelector('#formWrapper');
+    
+    const quoteInput = document.createElement("input");
+    quoteInput.id = "newQuoteText";
+    quoteInput.placeholder = "Enter a new quote";
 
-    const addQuoteBtn = document.getElementById('addQuoteBtn');
-    addQuoteBtn.addEventListener('click', addQuote);
+    const categoryInput = document.createElement("input");
+    categoryInput.id = "newQuoteCategory";
+    categoryInput.placeholder = "Enter quote category";
 
-}
+    const addButton = document.createElement("button");
+    addButton.id = "addQuoteBtn";
+    addButton.textContent = "Add Quote";
 
-function addQuote(){
-    const quoteInput = document.getElementById('newQuoteText');
-    const categoryInput = document.getElementById('newQuoteCategory');
-    const newQuote = quoteInput.value.trim();
-    const newCategory = categoryInput.value.trim();
+    addButton.addEventListener("click", () => {
+        const newQuote = quoteInput.value.trim();
+        const newCategory = categoryInput.value.trim();
 
-    if (newQuote && newCategory) {
-        quotes.push({ text: newQuote, category: newCategory });
-        quoteInput.value = '';
-        categoryInput.value = '';
-        alert('Quote added successfully!');
-    }
-    else{
-        alert("Please fill out both fields");
+        if (newQuote && newCategory) {
+            quotes.push({ text: newQuote, category: newCategory });
+            quoteInput.value = '';
+            categoryInput.value = '';
+            alert('Quote added successfully!');
         }
+        else{
+            alert("Please fill out both fields");
+            };
+    });
+    formWrapper.appendChild(quoteInput);
+    formWrapper.appendChild(categoryInput);
+    formWrapper.appendChild(addButton);
+    document.body.appendChild(container);
 }
+
 
 showNewQuote.addEventListener('click',showRandomQuote);
 window.onload = createAddQuoteForm;
