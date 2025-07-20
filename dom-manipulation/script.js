@@ -158,11 +158,10 @@ function importFromJsonFile(event) {
 }
 
 function populateCategories(){
-    let categories = [];
-    quotes.forEach((quote) => {
-        if(!categories.includes(quote.category)){
-            categories.push(quote.category);
-        }
+    let categories = quotes.map(q => q.category);
+
+    categories = categories.filter((cat, index, self) => {
+        return self.indexOf(cat) === index;
     });
     categories.sort();
 
