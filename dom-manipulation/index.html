@@ -9,6 +9,9 @@
     <h1>Dynamic Quote Generator</h1>
     <div id="quoteDisplay"></div>
     <button id="newQuote">Show New Quote</button>
+    <select id="categoryFilter" onchange="filterQuotes()">
+        <option value="all">All Categories</option>
+    </select>
     <div>
         <label for="exportBtn">Click here to export quotes</label>
         <button id="exportBtn">Export Quotes</button>
