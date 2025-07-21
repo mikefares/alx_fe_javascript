@@ -29,6 +29,7 @@ window.onload = () => {
     }
 
     filterQuotes();
+    setInterval(syncQuotesFromServer, 10000);
 }
 
 function loadFromLocal(){
@@ -109,6 +110,7 @@ function createAddQuoteForm(){
             quoteInput.value = '';
             categoryInput.value = '';
             alert('Quote added successfully!');
+            sendQuotesToServer(quoteObject);
         }
         else{
             alert("Please fill out both fields");
@@ -143,7 +145,7 @@ function importFromJsonFile(event) {
     importedQuotes.forEach((quote) => {
       if (quote.text && quote.category) {
         if (!quotes.some(q => q.text === quote.text && q.category === quote.category)) {
-              const id = "quote_" + Date.now().toString() + Math.random().toString(16).slice(2);
+              const id = Date.now().toString();
               localStorage.setItem(id, JSON.stringify(quote));
               quotes.push(quote);
               importedCount++;
@@ -191,4 +193,61 @@ function filterQuotes(returnOnly = false){
     }
 
     quoteDisplay.innerHTML = "";
+}
+
+async function syncQuotesFromServer(){
+    try{    
+        const res = await fetch("https://jsonplaceholder.typicode.com/posts");
+        const data = await res.json();
+
+        const serverQuotes = data.slice(0, 10).map(post => ({
+            text: post.title,
+            category: post.body.split(" ")[0]
+        }));
+
+        for (const sQuote of serverQuotes){
+        // serverQuotes.forEach(sQuote => {
+            console.log(sQuote);
+            const existingQuote = quotes.findIndex(q => q.text === sQuote.text);
+
+            if (existingQuote !== -1){
+                let answer = prompt(`The quote: "${sQuote.text} - ${sQuote.category}" already exists. \n Enter 'Yes' to replace or 'No' to skip`)
+                if (answer.toLowerCase == "yes" ){
+                    quotes[existingQuote] = sQuote;
+                }
+                else{
+                    continue;
+                }                
+            }
+            else {
+                quotes.push(sQuote);
+                const id = Date.now().toString();;
+                localStorage.setItem(id, JSON.stringify(sQuote));
+            }
+        };
+    }
+    catch{
+        console.error("Failed to fetch quotes from server")
+    }
+}
+
+async function sendQuotesToServer(quote){
+    try{
+        const response = await fetch("https://jsonplaceholder.typicode.com/posts", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                title: quote.text,
+                category: quote.category
+            })
+        })
+
+        const result = await response.json();
+        console.log(result);
+    }
+    catch{
+        console.error("Failed to push quotes to server")
+    }
 }
