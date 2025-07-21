@@ -211,13 +211,7 @@ async function fetchQuotesFromServer(){
             const existingQuote = quotes.findIndex(q => q.text === sQuote.text);
 
             if (existingQuote !== -1){
-                let answer = prompt(`The quote: "${sQuote.text} - ${sQuote.category}" already exists. \n Enter 'Yes' to replace or 'No' to skip`)
-                if (answer.toLowerCase == "yes" ){
-                    quotes[existingQuote] = sQuote;
-                }
-                else{
-                    continue;
-                }                
+                quotes[existingQuote] = sQuote;               
             }
             else {
                 quotes.push(sQuote);
@@ -234,6 +228,7 @@ async function fetchQuotesFromServer(){
 async function syncQuotes(){
     await fetchQuotesFromServer();
     setInterval(fetchQuotesFromServer, 10000);
+    alert("Quotes synced with server!")
 }
 
 async function sendQuotesToServer(quote){
