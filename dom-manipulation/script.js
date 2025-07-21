@@ -29,7 +29,7 @@ window.onload = () => {
     }
 
     filterQuotes();
-    setInterval(syncQuotesFromServer, 10000);
+    setInterval(fetchQuotesFromServer, 10000);
 }
 
 function loadFromLocal(){
@@ -195,7 +195,7 @@ function filterQuotes(returnOnly = false){
     quoteDisplay.innerHTML = "";
 }
 
-async function syncQuotesFromServer(){
+async function fetchQuotesFromServer(){
     try{    
         const res = await fetch("https://jsonplaceholder.typicode.com/posts");
         const data = await res.json();
