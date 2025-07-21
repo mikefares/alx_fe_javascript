@@ -29,7 +29,7 @@ window.onload = () => {
     }
 
     filterQuotes();
-    setInterval(fetchQuotesFromServer, 10000);
+    syncQuotes();
 }
 
 function loadFromLocal(){
@@ -229,6 +229,11 @@ async function fetchQuotesFromServer(){
     catch{
         console.error("Failed to fetch quotes from server")
     }
+}
+
+async function syncQuotes(){
+    await fetchQuotesFromServer();
+    setInterval(fetchQuotesFromServer, 10000);
 }
 
 async function sendQuotesToServer(quote){
